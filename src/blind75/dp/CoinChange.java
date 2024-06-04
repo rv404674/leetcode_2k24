@@ -3,6 +3,8 @@ package blind75.dp;
 import java.util.Arrays;
 
 public class CoinChange {
+    // TC -  * O(amount * coins.len)
+    // SC - O(amount) + O(amount)
     public static int coinChange(int[] coins, int amount) {
         if (amount == 0)
             return 0;
@@ -40,6 +42,26 @@ public class CoinChange {
 
 
         return dp[amount];
+    }
+
+    public static int coinChangeUsingTabulation(int[] coins, int amount) {
+        if (amount == 0)
+            return 0;
+
+        int[] dp = new int[amount + 1];
+        dp[0] = 0;
+
+        for (int i = 1; i <= amount; i++) {
+            dp[i] = Integer.MAX_VALUE;
+
+            for (int coin : coins)
+                if (i >= coin) {
+                    dp[i] = Math.min(dp[i], dp[amount - coin]);
+                }
+        }
+
+        return dp[amount] == Integer.MAX_VALUE ? -1 : dp[amount];
+
     }
 
     public static void main(String[] args) {

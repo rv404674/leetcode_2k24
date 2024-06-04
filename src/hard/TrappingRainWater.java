@@ -30,10 +30,10 @@ public class TrappingRainWater {
             // Our bottleneck is the min one. Hence try moving the smaller one.
             // also since we are always doing Math.max, moving left to right, will give us a bigger one.
             if (leftMax <= rightMax) {
-                totalWater += Math.min(leftMax, rightMax) - height[lo];
+                totalWater += leftMax - height[lo];
                 lo++;
             } else {
-                totalWater += Math.min(leftMax, rightMax) - height[hi];
+                totalWater += rightMax - height[hi];
                 hi--;
             }
 
