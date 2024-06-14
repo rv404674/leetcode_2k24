@@ -1,3 +1,5 @@
+package hiring_contests;
+
 import java.util.Scanner;
 
 public class OverlappingIntervals {

@@ -1,3 +1,5 @@
+package hiring_contests;
+
 import java.util.HashSet;
 import java.util.Scanner;
 
