@@ -55,23 +55,22 @@ public class CoinChange {
             dp[i] = Integer.MAX_VALUE;
 
             for (int coin : coins)
-                if (i >= coin) {
-                    dp[i] = Math.min(dp[i], dp[amount - coin]);
+                if (i >= coin && dp[i - coin] != Integer.MAX_VALUE) {
+                    dp[i] = Math.min(dp[i], 1 + dp[i - coin]);
                 }
         }
 
         return dp[amount] == Integer.MAX_VALUE ? -1 : dp[amount];
-
     }
 
     public static void main(String[] args) {
         int[] ut1 = {2, 3, 4, 7, 10};
         int amount = 24;
-        System.out.println(coinChange(ut1, amount));
+        System.out.println(coinChangeUsingTabulation(ut1, amount));
 
         int[] ut2 = {5, 6, 7};
         amount = 3;
-        System.out.println(coinChange(ut2, amount));
+        System.out.println(coinChangeUsingTabulation(ut2, amount));
 
     }
 }
