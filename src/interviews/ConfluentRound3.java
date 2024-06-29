@@ -89,15 +89,23 @@ package interviews;
 //     {8, 6, 1, 0, 5, 7, 4, 2, 3},
 // };
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 class ConfluentRound3 {
-    public boolean isValidGrid(int[][] grid){
+    public boolean isValidGrid(int[][] grid) {
         HashMap<Integer, Set<Integer>> rowHashMap = new HashMap<>();
         HashMap<Integer, Set<Integer>> columnHashMap = new HashMap<>();
 
-        if(checkRowsAndColumns(grid, rowHashMap, columnHashMap)){
+        // initiazlie
+        for (int i = 0; i < 9; i++) {
+            rowHashMap.put(i, new HashSet<>());
+            columnHashMap.put(i, new HashSet<>());
+        }
+
+        if (isValidSudoko(grid, rowHashMap, columnHashMap)) {
             // invalid sudok - return false.
             return false;
         }
@@ -107,7 +115,9 @@ class ConfluentRound3 {
         return true;
     }
 
-    public static boolean checkRowsAndColumns(int[][] grid, HashMap<Integer, Set<Integer>> rowHashmap, HashMap<Integer, Set<Integer>> columnHashMap){
+    public static boolean isValidSudoko(int[][] grid,
+                                              HashMap<Integer, Set<Integer>> rowHashmap,
+                                              HashMap<Integer, Set<Integer>> columnHashMap) {
 
         int row = grid.length;
         int cols = grid[0].length;
@@ -115,42 +125,24 @@ class ConfluentRound3 {
         // (n*m)
         // SC - (N*m) + (N*m) = O(N*M)
 
-        for(int i=0; i<row; i++){
-            for(int j=0; j<cols; j++){
-                if(grid[i][j] > 9){
-                    return true;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < cols; j++) {
+                int value = grid[i][j];
+
+                if (value > 9) {
+                    return false;
                 }
 
-
-                if(!rowHashmap.containsKey(i)){
-                    rowHashmap.put(i, new HashSet());
-                } else {
-                    Set<Integer> rowValue = rowHashmap.get(i);
-                    if(rowValue.contains(grid[i][j])){
-                        return true;
-                    }
-                    rowValue.add(grid[i][j]);
-                    rowHashmap.put(i, rowValue);
+                if(rowHashmap.get(i).contains(value) || columnHashMap.get(j).contains(value)){
+                    return false;
                 }
 
-
-                if(!columnHashMap.containsKey(j)){
-                    columnHashMap.put(j, new HashSet());
-                } else {
-                    Set<Integer> colValue = columnHashMap.get(i);
-                    if(colValue.contains(grid[i][j])){
-                        return true;
-                    }
-
-                    colValue.add(grid[i][j]);
-                    columnHashMap.put(j, colValue);
-                }
-
+                rowHashmap.get(i).add(value);
+                columnHashMap.get(i).add(value);
             }
         }
 
-        return false;
-
+        return true;
     }
 
     public static void main(String[] args) {
