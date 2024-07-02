@@ -1,6 +1,7 @@
 package dp;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -32,7 +33,6 @@ class JobComparator implements Comparator<Job> {
 }
 
 public class MaxProfitInJobScheduling {
-    int mxProfit = -1;
     public int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
         List<Job> jobs = new ArrayList<>();
         for(int i=0; i<profit.length; i++){
@@ -40,26 +40,28 @@ public class MaxProfitInJobScheduling {
         }
 
         sortBasedOnStartTime(jobs);
+        int[] dp = new int[profit.length+1];
+        Arrays.fill(dp, -1);
 
-        for(int i=0; i<jobs.size(); i++){
-            computeProfit(i, jobs.get(i).endTime, jobs.get(i).profit, jobs);
-        }
-        return mxProfit;
+        return computeProfit(0, jobs.get(0).endTime, dp, jobs);
     }
 
-    public void computeProfit(int index, int lastEndTime, int curProfit, List<Job> jobs){
-        mxProfit = Math.max(curProfit, mxProfit);
-
-        if(index == jobs.size()){
-            return;
+    public int computeProfit(int index, int lastEndTime, int[] dp, List<Job> jobs){
+        if(index >= jobs.size()){
+            return 0;
         }
 
-        for(int i=index; i<jobs.size(); i++){
-            if(jobs.get(i).starTime >= lastEndTime){
-                computeProfit(i+1, jobs.get(i).endTime, curProfit + jobs.get(i).profit, jobs);
-            }
+        if(dp[index] != -1){
+            return dp[index];
         }
 
+        int notTake = computeProfit(index+1, lastEndTime, dp, jobs);
+
+        int nextJobIndex = getNextIndex(jobs.get(index).endTime, jobs);
+        int take = jobs.get(nextJobIndex).profit + computeProfit(nextJobIndex, jobs.get(nextJobIndex).endTime, dp, jobs);
+
+        dp[index] = Math.max(notTake, take);
+        return dp[index];
     }
 
     public void sortBasedOnStartTime(List<Job> jobs){
@@ -67,5 +69,22 @@ public class MaxProfitInJobScheduling {
         jobs.sort(comparator);
     }
 
+    public int getNextIndex(int endTime, List<Job> jobs){
+        int lo = 0;
+        int hi = jobs.size();
+        int ans = -1;
+        
+        while(lo <= hi){
+            int mid = lo + (hi-lo)/2;
+            if(jobs.get(mid).starTime >= mid){
+                ans = mid;
+                break;
+            } else {
+                lo = mid+1;
+            }
+        }
+
+        return ans;
+    }
 
 }
