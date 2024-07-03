@@ -7,10 +7,11 @@ import java.util.List;
 
 // TODO:
 // Appr1 - Recursion + comprator (solved 18/35 tc)
-// Appr2 - Use memoization (try it yourself).
-// Optimized approaches
-// Video - 1 https://www.youtube.com/watch?v=LL0tVxlAeV4
-// Video - 2 https://www.youtube.com/watch?v=JLoWc3v0SiE
+// Appr2 - Use memoization (try it yourself). O(n2) - TLE (30/35 passed).
+// Either take and include the profit or not take.
+
+// Appr3 - To find the next index, use BS. - (Onlogn).
+// NOTE: also draw a recrusive tree yourself.
 
 class Job {
     int starTime;
@@ -55,10 +56,14 @@ public class MaxProfitInJobScheduling {
             return dp[index];
         }
 
-        int notTake = computeProfit(index+1, lastEndTime, dp, jobs);
+        // If you are at last job, and you are taking it.
+        int take = jobs.get(index).profit;
+        int nextJobIndex = getNextIndexOptimized(index, jobs);
+        if(nextJobIndex != -1){
+            take = take + computeProfit(nextJobIndex, jobs.get(nextJobIndex).endTime, dp, jobs);
+        }
 
-        int nextJobIndex = getNextIndex(jobs.get(index).endTime, jobs);
-        int take = jobs.get(nextJobIndex).profit + computeProfit(nextJobIndex, jobs.get(nextJobIndex).endTime, dp, jobs);
+        int notTake = computeProfit(index+1, lastEndTime, dp, jobs);
 
         dp[index] = Math.max(notTake, take);
         return dp[index];
@@ -69,16 +74,27 @@ public class MaxProfitInJobScheduling {
         jobs.sort(comparator);
     }
 
-    public int getNextIndex(int endTime, List<Job> jobs){
-        int lo = 0;
-        int hi = jobs.size();
+    public int getNextIndex(int index, List<Job> jobs){
+       for(int i = index; i<jobs.size(); i++){
+           if(jobs.get(i).starTime >= jobs.get(index).endTime){
+               return i;
+           }
+       }
+
+       return -1;
+    }
+
+    // Binary Search
+    public int getNextIndexOptimized(int index, List<Job> jobs){
+        int lo = index+1;
+        int hi = jobs.size()-1;
         int ans = -1;
-        
+
         while(lo <= hi){
             int mid = lo + (hi-lo)/2;
-            if(jobs.get(mid).starTime >= mid){
+            if(jobs.get(index).endTime <= jobs.get(mid).starTime){
+                hi = mid-1;
                 ans = mid;
-                break;
             } else {
                 lo = mid+1;
             }
