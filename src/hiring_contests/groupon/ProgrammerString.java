@@ -1,17 +1,5 @@
 package hiring_contests.groupon;
 
-import java.io.*;
-import java.math.*;
-import java.security.*;
-import java.text.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.*;
-import java.util.regex.*;
-import java.util.stream.*;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
-
 // Problem - https://gist.github.com/neerajkumar/58d7a8c48dfb2675c2c444524f511a0a
 
 class Result {
@@ -42,8 +30,6 @@ class Result {
             }
         }
 
-        System.out.println(leftEndingIndex);
-
         // loop2 - iterate from right
         int[] processingMap2 = new int[26];
         int rightEndingIndex = 0;
@@ -64,32 +50,18 @@ class Result {
 
     public static boolean isMatch(int[] originalMap, int[] currentMap){
         for(int i=0; i<26; i++){
-            if(originalMap[i] != currentMap[i]){
+            // NOTE: should be greather than, not equal to.
+            if(originalMap[i] > currentMap[i]){
                 return false;
             }
         }
 
-        System.out.println("Returned true");
         return true;
     }
 
-}
+    public static void main(String[] args) {
+        System.out.println(programmerStrings("progxrammerrxproxgrammer"));
 
-public class Solution {
-    public static void main(String[] args) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
-
-        String s = bufferedReader.readLine();
-
-        int result = Result.programmerStrings(s);
-
-        bufferedWriter.write(String.valueOf(result));
-        bufferedWriter.newLine();
-
-        bufferedReader.close();
-        bufferedWriter.close();
     }
-}
 
-"""
+}

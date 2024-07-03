@@ -1,38 +1,33 @@
 package hiring_contests.groupon;
 
-import java.io.*;
-import java.math.*;
-import java.security.*;
-import java.text.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.*;
-import java.util.regex.*;
-import java.util.stream.*;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-// https://www.geeksforgeeks.org/minimum-number-of-distinct-elements-after-removing-m-items/
+// Problem Statemet - https://www.geeksforgeeks.org/minimum-number-of-distinct-elements-after-removing-m-items/
+// Smart Scale (asked in groupon) - OA.
+
 class ItemWithCount {
-    int itemId;
+    int id;
     int count;
 
-    public ItemWithCount(int itemId, int count){
-        this.itemId = itemId;
+    public ItemWithCount(int id, int count) {
+        this.id = id;
         this.count = count;
     }
 }
 
 class ItemWithCountComparator implements Comparator<ItemWithCount> {
+
     @Override
-    public int compare(ItemWithCount o1, ItemWithCount o2){
+    public int compare(ItemWithCount o1, ItemWithCount o2) {
         return Integer.compare(o1.count, o2.count);
     }
 }
 
-
-
-class Result {
+class SmartScale {
 
     /*
      * Complete the 'deleteProducts' function below.
@@ -44,58 +39,27 @@ class Result {
      */
 
     public static int deleteProducts(List<Integer> ids, int m) {
-        HashMap<Integer, Integer> hm = new HashMap<>();
-        for(Integer id: ids){
-            hm.put(id, hm.getOrDefault(id, 0) + 1);
+        HashMap<Integer, Integer> hashmap = new HashMap<>();
+
+        for(int i: ids){
+            hashmap.put(i, hashmap.getOrDefault(i, 0) + 1);
         }
 
-        // create ItemWithCount list;
-        List<ItemWithCount> items = new ArrayList();
-        for(Map.Entry<Integer, Integer> entrySet: hm.entrySet()){
-            items.add(new ItemWithCount(entrySet.getKey(), entrySet.getValue()));
+        List<ItemWithCount> items = new ArrayList<>();
+        for(Map.Entry<Integer, Integer> entry: hashmap.entrySet()){
+            items.add(new ItemWithCount(entry.getKey(), entry.getValue()));
         }
 
-        ItemWithCountComparator comparator = new ItemWithCountComparator();
-        items.sort(comparator);
+        items.sort(new ItemWithCountComparator());
 
         for(ItemWithCount item: items){
             if(item.count <= m){
                 m -= item.count;
-                hm.remove(item.itemId);
+                hashmap.remove(item.id);
             }
         }
 
-        return hm.size();
-
+        return hashmap.size();
     }
 
-}
-public class Solution {
-    public static void main(String[] args) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
-
-        int idsCount = Integer.parseInt(bufferedReader.readLine().trim());
-
-        List<Integer> ids = IntStream.range(0, idsCount).mapToObj(i -> {
-                    try {
-                        return bufferedReader.readLine().replaceAll("\\s+$", "");
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                })
-                .map(String::trim)
-                .map(Integer::parseInt)
-                .collect(toList());
-
-        int m = Integer.parseInt(bufferedReader.readLine().trim());
-
-        int result = Result.deleteProducts(ids, m);
-
-        bufferedWriter.write(String.valueOf(result));
-        bufferedWriter.newLine();
-
-        bufferedReader.close();
-        bufferedWriter.close();
-    }
 }
