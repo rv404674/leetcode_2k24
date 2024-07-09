@@ -22,7 +22,7 @@ public class MaxLenOfValidSubsequence {
         }
 
         // not pick
-        int notPick = computeMaxLen(index + 1, lastNum, sum, dp, nums);
+        int notPick = computeMaxLen(index + 1, nums[index], sum, dp, nums);
         int pick = 0;
 
         if (sum % 2 != 0) {

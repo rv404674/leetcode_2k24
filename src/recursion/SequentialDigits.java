@@ -1,58 +1,41 @@
 package recursion;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
-class Element {
-    String curString;
-    int lastDigit;
-
-    public Element(String curString, int lastDigit) {
-        this.curString = curString;
-        this.lastDigit = lastDigit;
-    }
-}
+// if the last digit is x, next would be x+1.
+// DFS/Recursion wont make sense here as you just need to add +1.
+// Do BFS
+// By default sorted output.
 
 public class SequentialDigits {
     public static List<Integer> sequentialDigits(int low, int high) {
-        List<Integer> sequentialDigits = new ArrayList<>();
-        List<Element> elements = new ArrayList<>();
-        int start = 12;
-        int lastDigit = 3;
+        List<Integer> ans = new ArrayList<>();
+        Queue<Integer> q = new LinkedList<>();
 
-        while(start < 89){
-            elements.add(new Element(Integer.toString(start), lastDigit));
-            start += 11;
-            lastDigit++;
+        for (int i = 1; i < 9; i++) {
+            q.offer(i);
         }
 
-        for(Element element: elements){
-            int curValue = Integer.parseInt(element.curString);
-            if(curValue >= low){
-                sequentialDigits.add(curValue);
-                recurse(element.curString + element.lastDigit, lastDigit+1, low, high, sequentialDigits);
+        while (!q.isEmpty()) {
+            int num = q.poll();
+            if (num >= low && num <= high) {
+                ans.add(num);
+            }
+
+            int lastDigit = num % 10;
+
+            if (lastDigit < 9) {
+                int nextNum = num * 10 + lastDigit + 1;
+                if (nextNum <= high) {
+                    q.offer(nextNum);
+                }
             }
         }
 
-
-        if(high >= 89){
-            sequentialDigits.add(89);
-        }
-
-        sequentialDigits.sort(null);
-        return sequentialDigits;
-    }
-
-    public static void recurse(String curString, int lastDigit, int low, int high, List<Integer> sequentialDigits){
-        int curInt = Integer.parseInt(curString);
-        if(curInt < low || curInt > high){
-            return;
-        }
-
-        sequentialDigits.add(curInt);
-
-        recurse(curString+ Integer.toString(lastDigit), lastDigit+1, low, high, sequentialDigits);
+        return ans;
     }
 
     public static void main(String[] args) {
