@@ -1,4 +1,4 @@
-package blind75.Intervals;
+package heap;
 
 import java.util.Arrays;
 import java.util.PriorityQueue;
