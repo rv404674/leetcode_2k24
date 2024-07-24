@@ -11,6 +11,7 @@ public class MeetingRooms2 {
 
         Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
         Queue<Integer> minHeap = new PriorityQueue<>();
+        int roomsRequired = 0;
 
         for (int[] interval : intervals) {
             int meetStartTime = interval[0];
@@ -22,11 +23,10 @@ public class MeetingRooms2 {
             }
 
             minHeap.add(meetEndTime);
+            roomsRequired = Math.max(roomsRequired, minHeap.size());
         }
 
-        // You dont need to compute max at every step.
-        // minheap would always have the total meeting rooms.
-        return minHeap.size();
+        return roomsRequired;
     }
 
     public static void main(String[] args) {

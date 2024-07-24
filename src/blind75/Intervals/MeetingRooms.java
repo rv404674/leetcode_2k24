@@ -10,13 +10,12 @@ public class MeetingRooms {
 
             Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
 
-            int start = intervals[0][0];
-            int end = intervals[0][1];
+            int start = -1, end = -1;
 
-            for (int i = 1; i < intervals.length; i++) {
+            for (int i = 0; i < intervals.length; i++) {
                 int[] curInterval = intervals[i];
 
-                if (end > curInterval[0]) {
+                if (i != 0 && end > curInterval[0]) {
                     // intersecting
                     return false;
                 } else {

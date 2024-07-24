@@ -8,7 +8,7 @@ import java.util.List;
 public class InfectBinaryTree {
     int mxDepth = 0;
 
-    // DFS Version - More intuitive.
+    // BFS Version - Better.
     public int amountOfTime(TreeNode root, int start) {
         HashMap<Integer, List<Integer>> graph = new HashMap<>();
         populateGraph(root, graph);
