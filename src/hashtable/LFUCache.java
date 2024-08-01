@@ -33,6 +33,8 @@ class LFUCacheSolution {
     // LinkedinHashSet() because we want to maintain order (as in case of ties remove LRU one)
     // and we also want O(1) contains and get.
     // Oldest element at first.
+    // NOTE: The intuition is keep track of the minFreq. Once it is time to evict
+    // remove the element from the freqMap that has key as minFreq.
     HashMap<Integer, LinkedHashSet<Node>> freqMap;
 
     int minFreq;
@@ -42,7 +44,7 @@ class LFUCacheSolution {
         this.cache = new HashMap<>();
         this.freqMap = new HashMap<>();
         this.capacity = capacity;
-        this.minFreq = 1;
+        this.minFreq = 0;
     }
 
     public int get(int key) {
@@ -71,7 +73,9 @@ class LFUCacheSolution {
             // not full first time node insertion
             minFreq = 1;
             Node node = new Node(key, value);
-            freqMap.put(node.freq, new LinkedHashSet<>());
+            if (!freqMap.containsKey(node.freq)) {
+                freqMap.put(node.freq, new LinkedHashSet<>());
+            }
             freqMap.get(node.freq).add(node);
             cache.put(key, node);
         }
@@ -80,12 +84,20 @@ class LFUCacheSolution {
 
     public void updateAccessedNode(Node node) {
         // node exists
-        LinkedHashSet<Node> set = freqMap.get(node.freq);
+        int freq = node.freq;
+        LinkedHashSet<Node> set = freqMap.get(freq);
         set.remove(node);
 
+        // if set is empty and it was the minFreq
+        if (set.isEmpty() && freq == minFreq) {
+            minFreq++;
+        }
+
         node.freq++;
-        minFreq = Math.min(minFreq, node.freq);
-        set.add(node);
+        if (!freqMap.containsKey(node.freq)) {
+            freqMap.put(node.freq, new LinkedHashSet<>());
+        }
+        freqMap.get(node.freq).add(node);
     }
 
     public void evictLFUNode() {
@@ -104,6 +116,21 @@ class LFUCacheSolution {
 
 }
 
+// ["LFUCache","put","put","get","put","get","get","put","get","get","get"]
+// [[2],[1,1],[2,2],[1],[3,3],[2],[3],[4,4],[1],[3],[4]]
 public class LFUCache {
-    
+    public static void main(String[] args) {
+        LFUCacheSolution lfu = new LFUCacheSolution(2);
+        lfu.put(1, 1);
+        lfu.put(2, 2);
+        System.out.println(lfu.get(1));
+        lfu.put(3, 3);
+        lfu.get(2);
+        System.out.println(lfu.get(3));
+        lfu.put(4, 4);
+        System.out.println(lfu.get(1));
+        lfu.get(3);
+        lfu.get(4);
+    }
+
 }
