@@ -1,8 +1,5 @@
 package dp;
 
-import java.util.Arrays;
-import java.util.List;
-
 class Movie {
     int startTime;
     int endTime;
@@ -13,19 +10,19 @@ class Movie {
     }
 }
 
-public class Solution {
-    public int computeMaxMovies(List<Movie> movies){
-        movies.sort((a,b) -> Integer.compare(a.startTime, b.startTime));
-        int[] dp = new int[movies.size()];
-        Arrays.fill(dp, -1);
+class MovieFestivalsGfgSolution {
+//    public int computeMaxMovies(List<Movie> movies){
+//        movies.sort((a,b) -> Integer.compare(a.startTime, b.startTime));
+//        int[] dp = new int[movies.size()];
+//        Arrays.fill(dp, -1);
+//
+//        return
+//
+//    }
 
-        return
 
-    }
-
-
-    public
 }
+
 public class MovieFestivalsGfg {
 
 }
